@@ -1,0 +1,27 @@
+name: Get MAX chat_id (разовая настройка)
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel_link:
+        description: 'Алиас или ссылка на канал MAX (например, tolstoy_diary_max или https://max.ru/tolstoy_diary_max)'
+        required: true
+        type: string
+
+jobs:
+  get-chat-id:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Resolve chat_id
+        run: python3 get_chat_id.py "${{ inputs.channel_link }}"
+        env:
+          MAX_BOT_TOKEN: ${{ secrets.MAX_BOT_TOKEN }}
